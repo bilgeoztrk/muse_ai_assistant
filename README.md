@@ -1,6 +1,6 @@
-# 🧩 Muse AI Assistant
+# 🧩 Muse Puzzle — AI Asistanı
 
-> Dijital pazarlama firmaları için yapay zeka destekli müşteri asistanı ve lead yönetim sistemi.
+> Niş ve lüks sanat & yaşam tarzı (Art & Living) markası için yapay zeka destekli dijital danışman ve müşteri talep yönetim sistemi.
 
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 [![Flask](https://img.shields.io/badge/Flask-3.1-000000?style=for-the-badge&logo=flask&logoColor=white)](https://flask.palletsprojects.com)
@@ -11,15 +11,20 @@
 
 ## 📋 Proje Hakkında
 
-**Muse AI Assistant**, dijital pazarlama ajanslarının web sitelerine entegre edilebilen, yapay zeka destekli bir sohbet asistanıdır. Potansiyel müşterilerle otomatik iletişim kurar, ihtiyaçlarını analiz eder ve iletişim bilgilerini (lead) güvenli şekilde kaydeder.
+**Muse Puzzle AI Asistanı**, lüks sanat ve yaşam tarzı (Art & Living) markası **Muse Puzzle** için geliştirilmiş akıllı bir dijital marka asistanıdır. Web sitesini ziyaret eden sanatseverlere, koleksiyonerlere ve nitelikli hediye arayışında olan profesyonellere entelektüel, sakin ve sofistike bir rehberlik sunar.
+
+Klasik puzzle deneyimini doğrudan duvara asılabilecek kalıcı bir sanat objesine dönüştüren Muse Puzzle dünyasında; telifli lisanslı eserler, entegre lüks çerçeveler, hikayeli kutu içerikleri, sürdürülebilirlik ilkeleri ve "MUSE Care" eksik parça desteği konularında ziyaretçilere yardımcı olurken, özel hediye ve iletişim taleplerini (lead) güvenle kaydeder.
 
 ### ✨ Temel Özellikler
 
 | Özellik | Açıklama |
 |---------|----------|
-| 🤖 **AI Sohbet** | Groq API üzerinden LLM destekli akıllı müşteri sohbeti |
-| 📊 **Lead Yönetimi** | Potansiyel müşteri bilgilerini otomatik toplama ve saklama |
-| 🌐 **Wix Entegrasyonu** | Wix Velo ile kolayca web sitesine gömülebilir chatbot widget |
+| 🤖 **Sofistike AI Danışman** | Groq API üzerinden LLM destekli; sakin, kibar ve entelektüel tonlu marka asistanı |
+| 🖼️ **Koleksiyon & Çerçeve Rehberi** | Telifli sanat eserleri, milimetrik entegre çerçeveler ve hikayeli kutular hakkında detaylı bilgilendirme |
+| 🎁 **Kişiselleştirilmiş Hediye Tavsiyesi** | Yöneticiye, eşe veya sanatsever dostlara uygun sanat akımı ve koleksiyon önerileri |
+| 🛡️ **MUSE Care Desteği** | Eksik parça taleplerinde parça koordinatına göre ücretsiz parça temin süreci rehberliği |
+| 📊 **Müşteri & Talep Yönetimi** | Özel sipariş ve iletişim taleplerini otomatik kaydetme ve yönetim paneli |
+| 🌐 **Wix / Web Entegrasyonu** | Web sitelerine kolayca gömülebilir chatbot widget'ı |
 | 🔒 **Güvenlik** | SQL Injection koruması, CORS yapılandırması, ortam değişkenleri ile gizli anahtar yönetimi |
 | 🎭 **Demo Modu** | API anahtarı olmadan da test edilebilir fallback modu |
 
@@ -164,7 +169,7 @@ Content-Type: application/json
 **İstek:**
 ```json
 {
-  "message": "Merhaba, dijital pazarlama hizmetleriniz hakkında bilgi almak istiyorum.",
+  "message": "Sanatsever bir arkadaşım için hediye önerisi alabilir miyim?",
   "history": []
 }
 ```
@@ -172,13 +177,13 @@ Content-Type: application/json
 **Yanıt (200):**
 ```json
 {
-  "response": "Merhaba! Size yardımcı olmaktan mutluluk duyarım. Hangi dijital pazarlama alanında destek arıyorsunuz?"
+  "response": "Sanatsever dostunuz için özel hikayeli kutusu ve entegre lüks çerçevesiyle sunulan lisanslı koleksiyonlarımız mükemmel bir seçim olacaktır. İlgi duyduğu özel bir sanat akımı veya dönem var mıdır?"
 }
 ```
 
 ---
 
-### Lead Kayıt
+### Lead / Talep Kayıt
 
 ```http
 POST /api/leads
@@ -190,7 +195,7 @@ Content-Type: application/json
 {
   "name": "Bilge Öztürk",
   "phone": "+90 555 123 4567",
-  "message": "SEO danışmanlığı hakkında bilgi almak istiyorum."
+  "message": "Entegre lüks çerçeve seçenekleri ve kurumsal hediye siparişi hakkında bilgi almak istiyorum."
 }
 ```
 
@@ -204,7 +209,7 @@ Content-Type: application/json
 
 ---
 
-### Lead Listeleme
+### Lead / Talep Listeleme
 
 ```http
 GET /api/leads
@@ -218,7 +223,7 @@ GET /api/leads
       "id": 1,
       "name": "Bilge Öztürk",
       "phone": "+90 555 123 4567",
-      "message": "SEO danışmanlığı hakkında bilgi almak istiyorum.",
+      "message": "Entegre lüks çerçeve seçenekleri ve kurumsal hediye siparişi hakkında bilgi almak istiyorum.",
       "created_at": "2026-09-20 19:30:00"
     }
   ],
@@ -292,7 +297,7 @@ Bu proje [MIT Lisansı](LICENSE) ile lisanslanmıştır.
 ---
 
 <p align="center">
-  <b>Muse Puzzle</b> · Dijital Pazarlama AI Asistanı
+  <b>Muse Puzzle</b> · Art & Living Resmi Dijital Asistanı
   <br>
   <sub>Built with ❤️ by <a href="https://github.com/bilgeoztrk">bilgeoztrk</a></sub>
 </p>

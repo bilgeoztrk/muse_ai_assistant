@@ -1,8 +1,8 @@
 # SmartLead AI (Muse Puzzle) — Tam Proje Analiz Dokümanı
 
 > **Hedef Kitle:** Junior geliştirici, sıfırdan öğrenen biri.
-> **Proje Adı:** SmartLead AI / Muse Puzzle
-> **Ne Yapar:** Dijital pazarlama firması için yapay zeka destekli müşteri sohbet asistanı ve potansiyel müşteri (lead) kayıt sistemi.
+> **Proje Adı:** Muse Puzzle (SmartLead AI Altyapısı)
+> **Ne Yapar:** Niş & lüks sanat ve yaşam tarzı (Art & Living) markası için yapay zeka destekli müşteri asistanı ve talep/lead yönetim sistemi.
 
 ---
 
@@ -110,7 +110,7 @@ Config (Ana Sınıf)
 | `BUSINESS_CONTEXT` | Doğrudan kodda | Yapay zekanın kişiliği ve kuralları (system prompt) |
 
 **`BUSINESS_CONTEXT` Nedir?**
-Yapay zekaya "Sen kimsin, nasıl davranmalısın?" diye verilen talimattır (system prompt). Bu sayede AI, Muse Puzzle'ın dijital pazarlama danışmanı gibi davranır, Türkçe yanıt verir ve müşteriden iletişim bilgisi istemeye teşvik eder.
+Yapay zekaya "Sen kimsin, nasıl davranmalısın?" diye verilen talimattır (system prompt). Bu sayede AI, Muse Puzzle'ın resmi dijital marka asistanı gibi davranır; entelektüel, sakin ve sofistike bir tonla telifli sanat eserleri, entegre çerçeveler, hediye önerileri ve MUSE Care eksik parça garantisi konularında rehberlik eder, Türkçe yanıt verir ve gerektiğinde müşteriyi sipariş/iletişim formuna yönlendirir.
 
 ---
 
@@ -401,7 +401,7 @@ curl http://localhost:5001/health
 # 3. AI sohbet testi
 curl -X POST http://localhost:5001/api/chat \
   -H "Content-Type: application/json" \
-  -d '{"message": "Merhaba, dijital pazarlama hizmeti alabilir miyim?"}'
+  -d '{"message": "Entegre çerçeve seçenekleriniz hakkında bilgi alabilir miyim?"}'
 
 # 4. Müşteri kaydı ekleme
 curl -X POST http://localhost:5001/api/leads \
