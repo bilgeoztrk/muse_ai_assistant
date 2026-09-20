@@ -285,19 +285,6 @@ curl http://localhost:5001/api/leads
 
 ---
 
-## 🗺️ Yol Haritası
-
-- [x] MVP Backend (Flask + SQLite + Groq AI)
-- [x] REST API Endpoint'leri (Chat, Lead CRUD)
-- [x] Demo Modu (API anahtarı olmadan çalışma)
-- [ ] Wix Velo Frontend Entegrasyonu
-- [ ] Admin Dashboard Geliştirmeleri
-- [ ] Gelişmiş Sohbet Geçmişi Yönetimi
-- [ ] Çoklu Dil Desteği
-- [ ] Analytics ve Raporlama
-
----
-
 ## 📄 Lisans
 
 Bu proje [MIT Lisansı](LICENSE) ile lisanslanmıştır.
