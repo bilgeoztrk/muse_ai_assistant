@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Muse Puzzle Yönetim Paneli - Potansiyel müşteri kayıtlarını görüntüleyin ve yönetin.">
+    <title>Muse Puzzle - Yönetim Paneli</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        /* ── Header ── */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #00d2ff, #7b2ff7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 0.55rem 1.1rem;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #c0c0d0;
+        }
+
+        .btn-outline:hover {
+            background: rgba(255, 255, 255, 0.06);
+            border-color: #7b2ff7;
+            color: #fff;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #7b2ff7, #00d2ff);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: scale(1.03);
+        }
+
+        /* ── Stats ── */
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1rem;
+            padding: 1.5rem 2rem;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 1.25rem;
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+        }
+
+        .stat-card .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #00d2ff, #7b2ff7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.8rem;
+            color: #888;
+            margin-top: 0.3rem;
+        }
+
+        /* ── Table ── */
+        .table-wrapper {
+            padding: 0 2rem 2rem;
+        }
+
+        .table-card {
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .table-header h2 {
+            font-size: 1.05rem;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            padding: 0.85rem 1.25rem;
+            text-align: left;
+            font-size: 0.78rem;
+            font-weight: 600;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        tbody td {
+            padding: 0.9rem 1.25rem;
+            font-size: 0.88rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        tbody tr {
+            transition: background 0.15s;
+        }
+
+        tbody tr:hover {
+            background: rgba(123, 47, 247, 0.06);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(0, 210, 120, 0.12);
+            color: #00d278;
+        }
+
+        /* ── Empty State ── */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #666;
+        }
+
+        .empty-state .emoji {
+            font-size: 2.5rem;
+            margin-bottom: 0.75rem;
+        }
+
+        /* ── Loading ── */
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #888;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(123, 47, 247, 0.2);
+            border-top-color: #7b2ff7;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 768px) {
+            .header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .table-wrapper {
+                padding: 0 1rem 1rem;
+            }
+
+            table {
+                font-size: 0.82rem;
+            }
+
+            thead th, tbody td {
+                padding: 0.7rem 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <h1>📊 Muse Puzzle — Yönetim Paneli</h1>
+        <div class="header-actions">
+            <button class="btn btn-outline" onclick="loadLeads()">🔄 Yenile</button>
+            <a href="/" class="btn btn-outline">← Ana Sayfa</a>
+        </div>
+    </header>
+
+    <!-- Stats Row -->
+    <section class="stats-row" id="stats-row">
+        <div class="stat-card">
+            <div class="stat-value" id="stat-total">-</div>
+            <div class="stat-label">Toplam Lead</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="stat-today">-</div>
+            <div class="stat-label">Bugün</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-value" id="stat-week">-</div>
+            <div class="stat-label">Bu Hafta</div>
+        </div>
+    </section>
+
+    <!-- Leads Table -->
+    <section class="table-wrapper">
+        <div class="table-card">
+            <div class="table-header">
+                <h2>📋 Lead Listesi</h2>
+                <span id="table-count" style="color:#888; font-size:0.85rem;"></span>
+            </div>
+            <div id="table-body">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <p>Yükleniyor...</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        const API_BASE = window.location.origin;
+
+        // Load leads on page load
+        document.addEventListener('DOMContentLoaded', loadLeads);
+
+        async function loadLeads() {
+            const tableBody = document.getElementById('table-body');
+            tableBody.innerHTML = '<div class="loading"><div class="spinner"></div><p>Yükleniyor...</p></div>';
+
+            try {
+                const res = await fetch(`${API_BASE}/api/leads`);
+                const data = await res.json();
+
+                if (!res.ok) {
+                    tableBody.innerHTML = '<div class="empty-state"><div class="emoji">⚠️</div><p>Veriler yüklenemedi.</p></div>';
+                    return;
+                }
+
+                const leads = data.leads || [];
+                updateStats(leads);
+
+                if (leads.length === 0) {
+                    tableBody.innerHTML = '<div class="empty-state"><div class="emoji">📭</div><p>Henüz kayıtlı lead yok.</p><p style="margin-top:0.5rem;color:#555;">Karşılama sayfasından form doldurulduğunda burada görünecek.</p></div>';
+                    document.getElementById('table-count').textContent = '';
+                    return;
+                }
+
+                document.getElementById('table-count').textContent = `${leads.length} kayıt`;
+
+                let html = `
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>Ad Soyad</th>
+                                <th>Telefon</th>
+                                <th>Mesaj</th>
+                                <th>Tarih</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                leads.forEach((lead, i) => {
+                    const date = lead.created_at
+                        ? new Date(lead.created_at).toLocaleString('tr-TR', { dateStyle: 'short', timeStyle: 'short' })
+                        : '-';
+
+                    html += `
+                        <tr>
+                            <td>${lead.id}</td>
+                            <td><strong>${escapeHtml(lead.name)}</strong></td>
+                            <td>${escapeHtml(lead.phone)}</td>
+                            <td>${escapeHtml(lead.message || '-')}</td>
+                            <td>${date}</td>
+                        </tr>
+                    `;
+                });
+
+                html += '</tbody></table>';
+                tableBody.innerHTML = html;
+
+            } catch (err) {
+                tableBody.innerHTML = '<div class="empty-state"><div class="emoji">❌</div><p>Bağlantı hatası. Sunucunun çalıştığından emin olun.</p></div>';
+            }
+        }
+
+        function updateStats(leads) {
+            const now = new Date();
+            const todayStr = now.toISOString().slice(0, 10);
+            const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+            const todayCount = leads.filter(l => l.created_at && l.created_at.startsWith(todayStr)).length;
+            const weekCount = leads.filter(l => l.created_at && new Date(l.created_at) >= weekAgo).length;
+
+            document.getElementById('stat-total').textContent = leads.length;
+            document.getElementById('stat-today').textContent = todayCount;
+            document.getElementById('stat-week').textContent = weekCount;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+
+</body>
+</html>

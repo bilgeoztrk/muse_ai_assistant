@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Muse Puzzle - Akıllı dijital pazarlama asistanınız. Yapay zeka destekli müşteri iletişimi.">
+    <title>Muse Puzzle - Akıllı Pazarlama Asistanı</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        /* ── Header ── */
+        .header {
+            text-align: center;
+            padding: 2.5rem 1rem 1.5rem;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(90deg, #00d2ff, #7b2ff7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: #a0a0b8;
+            font-size: 0.95rem;
+        }
+
+        /* ── Main Layout ── */
+        .container {
+            max-width: 960px;
+            margin: 0 auto;
+            padding: 1rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ── Card ── */
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 1.5rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 32px rgba(123, 47, 247, 0.15);
+        }
+
+        .card h2 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ── Chat Widget ── */
+        #chat-messages {
+            height: 320px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            margin-bottom: 1rem;
+            padding-right: 0.25rem;
+        }
+
+        #chat-messages::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        #chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(123, 47, 247, 0.3);
+            border-radius: 4px;
+        }
+
+        .message {
+            padding: 0.65rem 1rem;
+            border-radius: 12px;
+            max-width: 85%;
+            font-size: 0.9rem;
+            line-height: 1.45;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message.user {
+            background: linear-gradient(135deg, #7b2ff7, #5b1fd4);
+            align-self: flex-end;
+            color: #fff;
+        }
+
+        .message.bot {
+            background: rgba(255, 255, 255, 0.08);
+            align-self: flex-start;
+            color: #d0d0e0;
+        }
+
+        .chat-input-area {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 0.7rem 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.06);
+            color: #e0e0e0;
+            font-size: 0.9rem;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .chat-input-area input:focus {
+            border-color: #7b2ff7;
+        }
+
+        .chat-input-area input::placeholder {
+            color: #777;
+        }
+
+        /* ── Buttons ── */
+        .btn {
+            padding: 0.7rem 1.2rem;
+            border-radius: 10px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #7b2ff7, #00d2ff);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: scale(1.03);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ── Lead Form ── */
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: #a0a0b8;
+            margin-bottom: 0.3rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.7rem 1rem;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.06);
+            color: #e0e0e0;
+            font-size: 0.9rem;
+            font-family: inherit;
+            outline: none;
+            transition: border 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: #7b2ff7;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        /* ── Status Message ── */
+        .status {
+            margin-top: 0.75rem;
+            padding: 0.6rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            display: none;
+        }
+
+        .status.success {
+            display: block;
+            background: rgba(0, 210, 120, 0.12);
+            color: #00d278;
+            border: 1px solid rgba(0, 210, 120, 0.2);
+        }
+
+        .status.error {
+            display: block;
+            background: rgba(255, 60, 60, 0.12);
+            color: #ff6b6b;
+            border: 1px solid rgba(255, 60, 60, 0.2);
+        }
+
+        /* ── Footer ── */
+        .footer {
+            text-align: center;
+            padding: 2rem 1rem;
+            color: #555;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <h1>💡 Muse Puzzle</h1>
+        <p>Akıllı dijital pazarlama asistanınız</p>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container">
+
+        <!-- Chat Widget -->
+        <section class="card" id="chat-section">
+            <h2>💬 Asistan ile Sohbet</h2>
+            <div id="chat-messages">
+                <div class="message bot">Merhaba! 👋 Size nasıl yardımcı olabilirim?</div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chat-input" placeholder="Mesajınızı yazın..." autocomplete="off">
+                <button class="btn btn-primary" id="chat-send-btn" onclick="sendMessage()">Gönder</button>
+            </div>
+        </section>
+
+        <!-- Lead Form -->
+        <section class="card" id="lead-section">
+            <h2>📋 İletişim Formu</h2>
+            <form id="lead-form" onsubmit="submitLead(event)">
+                <div class="form-group">
+                    <label for="lead-name">Ad Soyad</label>
+                    <input type="text" id="lead-name" placeholder="Adınızı girin" required>
+                </div>
+                <div class="form-group">
+                    <label for="lead-phone">Telefon</label>
+                    <input type="tel" id="lead-phone" placeholder="05XX XXX XX XX" required>
+                </div>
+                <div class="form-group">
+                    <label for="lead-message">Mesajınız</label>
+                    <textarea id="lead-message" placeholder="Nasıl yardımcı olabiliriz?"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary" id="lead-submit-btn" style="width:100%;">Gönder</button>
+            </form>
+            <div id="lead-status" class="status"></div>
+        </section>
+
+    </main>
+
+    <footer class="footer">
+        Muse Puzzle &copy; 2026 — Yapay Zekâ Destekli Müşteri İletişimi
+    </footer>
+
+    <script>
+        const API_BASE = window.location.origin;
+        let chatHistory = [];
+
+        // ── Chat Functions ──
+
+        async function sendMessage() {
+            const input = document.getElementById('chat-input');
+            const sendBtn = document.getElementById('chat-send-btn');
+            const message = input.value.trim();
+
+            if (!message) return;
+
+            // Add user message to UI
+            appendMessage(message, 'user');
+            input.value = '';
+            sendBtn.disabled = true;
+
+            // Add to history
+            chatHistory.push({ role: 'user', content: message });
+
+            try {
+                const res = await fetch(`${API_BASE}/api/chat`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message, history: chatHistory }),
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    appendMessage(data.response, 'bot');
+                    chatHistory.push({ role: 'assistant', content: data.response });
+                } else {
+                    appendMessage(`⚠️ ${data.error || 'Bir hata oluştu.'}`, 'bot');
+                }
+            } catch (err) {
+                appendMessage('⚠️ Bağlantı hatası. Lütfen tekrar deneyin.', 'bot');
+            }
+
+            sendBtn.disabled = false;
+            input.focus();
+        }
+
+        function appendMessage(text, sender) {
+            const container = document.getElementById('chat-messages');
+            const div = document.createElement('div');
+            div.className = `message ${sender}`;
+            div.textContent = text;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        }
+
+        // Send on Enter key
+        document.getElementById('chat-input').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') sendMessage();
+        });
+
+        // ── Lead Form Functions ──
+
+        async function submitLead(event) {
+            event.preventDefault();
+            const statusEl = document.getElementById('lead-status');
+            const submitBtn = document.getElementById('lead-submit-btn');
+
+            const name = document.getElementById('lead-name').value.trim();
+            const phone = document.getElementById('lead-phone').value.trim();
+            const message = document.getElementById('lead-message').value.trim();
+
+            submitBtn.disabled = true;
+
+            try {
+                const res = await fetch(`${API_BASE}/api/leads`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, phone, message }),
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    statusEl.className = 'status success';
+                    statusEl.textContent = '✅ Bilgileriniz başarıyla kaydedildi! En kısa sürede size ulaşacağız.';
+                    document.getElementById('lead-form').reset();
+                } else {
+                    statusEl.className = 'status error';
+                    statusEl.textContent = `❌ ${data.error || 'Bir hata oluştu.'}`;
+                }
+            } catch (err) {
+                statusEl.className = 'status error';
+                statusEl.textContent = '❌ Bağlantı hatası. Lütfen tekrar deneyin.';
+            }
+
+            submitBtn.disabled = false;
+
+            // Hide status after 5 seconds
+            setTimeout(() => { statusEl.className = 'status'; }, 5000);
+        }
+    </script>
+
+</body>
+</html>
