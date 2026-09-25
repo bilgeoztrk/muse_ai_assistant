@@ -2,7 +2,7 @@
 Muse Puzzle - AI Service Module
 
 Handles ALL AI/LLM interactions. AI-related code exists ONLY in this file.
-Uses Groq API with the Llama 3.1 model for generating responses.
+Uses Groq API with the Qwen3.8-27b model for generating responses.
 Falls back to demo mode if API key is not configured.
 """
 
