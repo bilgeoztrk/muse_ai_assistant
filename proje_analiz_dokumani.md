@@ -435,6 +435,6 @@ sqlite3 smartlead.db -column -header "SELECT * FROM leads;"
 
 1. **Git & GitHub:** Projeyi versiyon kontrolüne almak
 2. **Render.com:** Backend'i canlı ortama yayınlamak
-3. **Wix Velo:** Frontend'i Wix üzerinde oluşturup canlı API'ye bağlamak
+3. **Wix Velo:** Frontend'i Wix üzerinde oluşturup canlı API'ye bağlamak — Chatbot kodu hazır (`wix_velo/`), lead formu bağlantısı ve Wix üzerinde test bekliyor
 4. **README.md:** Proje dökümantasyonunu yazmak
 5. **Son Testler:** Canlı ortamda uçtan uca doğrulama
