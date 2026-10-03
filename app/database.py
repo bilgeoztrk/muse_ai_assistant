@@ -48,18 +48,25 @@ def init_db(app):
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
                 phone TEXT NOT NULL,
+                email TEXT,
                 message TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             )
             """
         )
+
+        # Migrate tables created before the email column existed
+        columns = [row["name"] for row in db.execute("PRAGMA table_info(leads)")]
+        if "email" not in columns:
+            db.execute("ALTER TABLE leads ADD COLUMN email TEXT")
+
         db.commit()
 
     # Register the close_db function to run at the end of each request
     app.teardown_appcontext(close_db)
 
 
-def add_lead(name, phone, message=""):
+def add_lead(name, phone, message="", email=""):
     """
     Add a new lead to the database.
     Uses parameterized queries (?) to prevent SQL injection.
@@ -68,14 +75,15 @@ def add_lead(name, phone, message=""):
         name (str): Lead's full name.
         phone (str): Lead's phone number.
         message (str): Optional message from the lead.
+        email (str): Optional email address of the lead.
 
     Returns:
         int: The ID of the newly inserted lead.
     """
     db = get_db()
     cursor = db.execute(
-        "INSERT INTO leads (name, phone, message) VALUES (?, ?, ?)",
-        (name, phone, message),
+        "INSERT INTO leads (name, phone, email, message) VALUES (?, ?, ?, ?)",
+        (name, phone, email, message),
     )
     db.commit()
     return cursor.lastrowid
@@ -90,7 +98,7 @@ def get_all_leads():
     """
     db = get_db()
     rows = db.execute(
-        "SELECT id, name, phone, message, created_at FROM leads ORDER BY created_at DESC"
+        "SELECT id, name, phone, email, message, created_at FROM leads ORDER BY created_at DESC"
     ).fetchall()
 
     return [
@@ -98,6 +106,7 @@ def get_all_leads():
             "id": row["id"],
             "name": row["name"],
             "phone": row["phone"],
+            "email": row["email"],
             "message": row["message"],
             "created_at": row["created_at"],
         }

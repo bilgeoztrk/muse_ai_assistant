@@ -195,9 +195,12 @@ Content-Type: application/json
 {
   "name": "Bilge Öztürk",
   "phone": "+90 555 123 4567",
+  "email": "bilge@example.com",
   "message": "Entegre lüks çerçeve seçenekleri ve kurumsal hediye siparişi hakkında bilgi almak istiyorum."
 }
 ```
+
+`name` ve `phone` zorunlu; `email` ve `message` isteğe bağlıdır. Geçersiz e-posta adresi `400` döner.
 
 **Yanıt (201):**
 ```json
@@ -223,6 +226,7 @@ GET /api/leads
       "id": 1,
       "name": "Bilge Öztürk",
       "phone": "+90 555 123 4567",
+      "email": "bilge@example.com",
       "message": "Entegre lüks çerçeve seçenekleri ve kurumsal hediye siparişi hakkında bilgi almak istiyorum.",
       "created_at": "2026-09-20 19:30:00"
     }

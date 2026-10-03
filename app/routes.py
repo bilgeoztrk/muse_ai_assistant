@@ -6,6 +6,8 @@ Routes only receive requests, delegate to the appropriate service layer,
 and return formatted responses.
 """
 
+import re
+
 from flask import Blueprint, request, jsonify, render_template
 from app.database import add_lead, get_all_leads
 from app.services.ai_service import AIService, AIServiceError
@@ -15,6 +17,9 @@ pages_bp = Blueprint("pages", __name__)
 
 # Blueprint for API routes (JSON responses)
 api_bp = Blueprint("api", __name__, url_prefix="/api")
+
+# Basic email format check: something@something.tld
+EMAIL_PATTERN = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 
 
 # ─────────────────────────────────────────────
@@ -76,7 +81,8 @@ def chat():
 def create_lead():
     """
     Save a new lead to the database.
-    Expects JSON: {"name": "...", "phone": "...", "message": "..."}
+    Expects JSON: {"name": "...", "phone": "...", "email": "...", "message": "..."}
+    Email and message are optional.
     Returns JSON: {"success": true, "lead_id": ...}
     """
     try:
@@ -88,13 +94,17 @@ def create_lead():
 
         name = data.get("name", "").strip()
         phone = data.get("phone", "").strip()
+        email = data.get("email", "").strip()
         message = data.get("message", "").strip()
 
         if not name or not phone:
             return jsonify({"error": "Name and phone fields are required."}), 400
 
+        if email and not EMAIL_PATTERN.match(email):
+            return jsonify({"error": "Invalid email address."}), 400
+
         # Delegate to database layer
-        lead_id = add_lead(name, phone, message)
+        lead_id = add_lead(name, phone, message, email)
 
         return jsonify({"success": True, "lead_id": lead_id}), 201
 

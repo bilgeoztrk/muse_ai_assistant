@@ -13,6 +13,7 @@ import { fetch } from 'wix-fetch';
 
 const API_BASE = 'https://muse-ai-assistant-wjam.onrender.com';
 const MAX_HISTORY = 10;
+const EMAIL_PATTERN = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 
 const CHAT_ERROR = 'Şu anda yanıt veremiyorum. Lütfen birkaç saniye sonra tekrar deneyin.';
 const LEAD_ERROR = 'Talebiniz şu anda iletilemedi. Lütfen daha sonra tekrar deneyin.';
@@ -79,21 +80,28 @@ export const sendChatMessage = webMethod(Permissions.Anyone, async (message, his
 
 /**
  * İletişim talebini (lead) kaydeder.
+ * lead: { name, phone, email?, message? } — ad ve telefon zorunlu
  * Dönüş: { ok: true, leadId } veya { ok: false, error }
  */
-export const submitLead = webMethod(Permissions.Anyone, async (name, phone, message) => {
-    const cleanName = String(name || '').trim();
-    const cleanPhone = String(phone || '').trim();
-    const cleanMessage = String(message || '').trim();
+export const submitLead = webMethod(Permissions.Anyone, async (lead) => {
+    const cleanName = String(lead?.name || '').trim();
+    const cleanPhone = String(lead?.phone || '').trim();
+    const cleanEmail = String(lead?.email || '').trim();
+    const cleanMessage = String(lead?.message || '').trim();
 
     if (!cleanName || !cleanPhone) {
         return { ok: false, error: 'Lütfen adınızı ve telefon numaranızı girin.' };
+    }
+
+    if (cleanEmail && !EMAIL_PATTERN.test(cleanEmail)) {
+        return { ok: false, error: 'Lütfen geçerli bir e-posta adresi girin.' };
     }
 
     try {
         const { ok, data } = await postJson('/api/leads', {
             name: cleanName,
             phone: cleanPhone,
+            email: cleanEmail,
             message: cleanMessage,
         });
         if (ok && data.success) {

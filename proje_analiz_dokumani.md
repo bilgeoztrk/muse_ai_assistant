@@ -179,6 +179,7 @@ Normalde bir tarayıcı, `wix.com` üzerinden `smartlead-api.onrender.com`'a ist
 | `id` | INTEGER | Benzersiz kayıt numarası | Otomatik artar (1, 2, 3...) |
 | `name` | TEXT | Müşterinin adı soyadı | Boş bırakılamaz (`NOT NULL`) |
 | `phone` | TEXT | Telefon numarası | Boş bırakılamaz (`NOT NULL`) |
+| `email` | TEXT | E-posta adresi | Boş bırakılabilir (girilirse format kontrolü yapılır) |
 | `message` | TEXT | Müşterinin mesajı/talebi | Boş bırakılabilir |
 | `created_at` | TIMESTAMP | Kayıt oluşturulma tarihi | Otomatik eklenir |
 
@@ -435,6 +436,6 @@ sqlite3 smartlead.db -column -header "SELECT * FROM leads;"
 
 1. **Git & GitHub:** Projeyi versiyon kontrolüne almak
 2. **Render.com:** Backend'i canlı ortama yayınlamak
-3. **Wix Velo:** Frontend'i Wix üzerinde oluşturup canlı API'ye bağlamak — Chatbot kodu hazır (`wix_velo/`), lead formu bağlantısı ve Wix üzerinde test bekliyor
+3. **Wix Velo:** Frontend'i Wix üzerinde oluşturup canlı API'ye bağlamak — Chatbot ve iletişim formu kodları hazır (`wix_velo/`), Wix üzerinde uçtan uca test bekliyor
 4. **README.md:** Proje dökümantasyonunu yazmak
 5. **Son Testler:** Canlı ortamda uçtan uca doğrulama

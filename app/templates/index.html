@@ -283,6 +283,10 @@
                     <input type="tel" id="lead-phone" placeholder="05XX XXX XX XX" required>
                 </div>
                 <div class="form-group">
+                    <label for="lead-email">E-posta</label>
+                    <input type="email" id="lead-email" placeholder="ornek@mail.com">
+                </div>
+                <div class="form-group">
                     <label for="lead-message">Mesajınız</label>
                     <textarea id="lead-message" placeholder="Nasıl yardımcı olabiliriz?"></textarea>
                 </div>
@@ -364,6 +368,7 @@
 
             const name = document.getElementById('lead-name').value.trim();
             const phone = document.getElementById('lead-phone').value.trim();
+            const email = document.getElementById('lead-email').value.trim();
             const message = document.getElementById('lead-message').value.trim();
 
             submitBtn.disabled = true;
@@ -372,7 +377,7 @@
                 const res = await fetch(`${API_BASE}/api/leads`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ name, phone, message }),
+                    body: JSON.stringify({ name, phone, email, message }),
                 });
 
                 const data = await res.json();

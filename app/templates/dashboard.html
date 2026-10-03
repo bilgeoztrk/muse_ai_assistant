@@ -314,6 +314,7 @@
                                 <th>#</th>
                                 <th>Ad Soyad</th>
                                 <th>Telefon</th>
+                                <th>E-posta</th>
                                 <th>Mesaj</th>
                                 <th>Tarih</th>
                             </tr>
@@ -331,6 +332,7 @@
                             <td>${lead.id}</td>
                             <td><strong>${escapeHtml(lead.name)}</strong></td>
                             <td>${escapeHtml(lead.phone)}</td>
+                            <td>${escapeHtml(lead.email || '-')}</td>
                             <td>${escapeHtml(lead.message || '-')}</td>
                             <td>${date}</td>
                         </tr>
