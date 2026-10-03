@@ -79,6 +79,27 @@ export const sendChatMessage = webMethod(Permissions.Anyone, async (message, his
 
 
 /**
+ * Tüm iletişim taleplerini (lead) en yeniden eskiye getirir.
+ * Not: Şu an herkes çağırabilir; yetki kısıtlaması istenirse Permissions.Admin yapılmalı.
+ * Dönüş: { ok: true, leads: [{ id, name, email, phone, message, created_at }] } veya { ok: false, error }
+ */
+export const getLeads = webMethod(Permissions.Anyone, async () => {
+    try {
+        const res = await fetch(`${API_BASE}/api/leads`, { method: 'get' });
+        const data = await res.json();
+        if (res.ok && Array.isArray(data.leads)) {
+            return { ok: true, leads: data.leads };
+        }
+        console.error('getLeads API error:', data.error);
+        return { ok: false, error: 'Kayıtlar alınamadı.' };
+    } catch (err) {
+        console.error('getLeads failed:', err);
+        return { ok: false, error: 'Kayıtlar alınamadı.' };
+    }
+});
+
+
+/**
  * İletişim talebini (lead) kaydeder.
  * lead: { name, phone, email?, message? } — ad ve telefon zorunlu
  * Dönüş: { ok: true, leadId } veya { ok: false, error }
