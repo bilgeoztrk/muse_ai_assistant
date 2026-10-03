@@ -1,19 +1,27 @@
 /**
- * Muse Puzzle - Wix Velo Chatbot (Site Geneli)
+ * Muse Puzzle - Wix Velo Site Geneli Kod (Chatbot + Footer İletişim Formu)
  *
  * Wix'te konumu: Page Code > Main Pages > masterPage.js
- * Bu dosyadaki kod tüm sayfalarda çalışır.
+ * Bu dosyadaki kod tüm sayfalarda çalışır. Header/Footer'daki elementlere
+ * yalnızca buradan erişilebilir.
  *
- * Gerekli elementler (hepsi "Show on all pages" olmalı):
- *   #chatToggle  → Sohbeti açıp kapatan buton
- *   #chatBox     → Sohbet penceresi (aşağıdaki 3 elementi içeren kutu, "Hidden on load" işaretli)
- *   #msgText     → Mesajların göründüğü Text
- *   #msgGiris    → Mesaj yazma kutusu (Text Input)
- *   #msgButton   → Gönder butonu
+ * Chatbot elementleri (Header'da, sabitlenmiş):
+ *   #chatToggle   → Sohbeti açıp kapatan buton
+ *   #chatBox      → Sohbet penceresi (aşağıdaki 3 elementi içeren kutu, "Hidden on load" işaretli)
+ *   #msgText      → Mesajların göründüğü Text
+ *   #msgGiris     → Mesaj yazma kutusu (Text Input)
+ *   #msgButton    → Gönder butonu
+ *
+ * İletişim formu elementleri (Footer'da):
+ *   #input4       → Adınız ve Soyadınız (zorunlu)
+ *   #input5       → E-posta (isteğe bağlı)
+ *   #input6       → Telefon Numarası (zorunlu)
+ *   #formMessage  → Mesajınız (isteğe bağlı)
+ *   #formButton   → Gönder butonu (ikon buton; yazısı değiştirilmez)
  */
 
 import { session } from 'wix-storage-frontend';
-import { sendChatMessage, wakeUpServer } from 'backend/museApi.web';
+import { sendChatMessage, submitLead, wakeUpServer } from 'backend/museApi.web';
 
 const WELCOME_MESSAGE =
     'Muse Puzzle dünyasına hoş geldiniz. Size ilham verecek bir koleksiyon keşfetmeniz, ' +
@@ -25,16 +33,30 @@ const MAX_HISTORY = 10;      // API'ye gönderilen geçmiş mesaj sayısı
 const MAX_VISIBLE = 6;       // Ekranda gösterilen son mesaj sayısı
 const MAX_STORED = 30;       // Sayfa geçişlerinde saklanan mesaj sayısı
 
+const EMAIL_PATTERN = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+const FORM_FIELD_IDS = ['#input4', '#input5', '#input6', '#formMessage'];
+
 // [{ role: 'user' | 'assistant', content: '...', isError?: true }]
 let messages = loadMessages();
 let isSending = false;
 let typingTimer = null;
+let isSubmittingLead = false;
 
 
 $w.onReady(function () {
     // Sunucuyu ziyaretçi sohbeti açmadan önce uyandır (sonucu beklenmez)
     wakeUpServer();
 
+    setupChat();
+    setupLeadForm();
+});
+
+
+// ─────────────────────────────────────────────
+// Chatbot
+// ─────────────────────────────────────────────
+
+function setupChat() {
     renderMessages();
 
     $w('#chatToggle').onClick(toggleChat);
@@ -44,7 +66,7 @@ $w.onReady(function () {
             handleSend();
         }
     });
-});
+}
 
 
 // ─────────────────────────────────────────────
@@ -163,4 +185,68 @@ function saveMessages() {
     } catch (err) {
         // Depolama dolu veya kapalıysa sohbet yine çalışır, sadece sayfa geçişinde sıfırlanır
     }
+}
+
+
+// ─────────────────────────────────────────────
+// Footer İletişim Formu
+// Geri bildirim: hatalı alanlar kırmızı çerçeveyle işaretlenir,
+// başarılı gönderimde form temizlenir.
+// ─────────────────────────────────────────────
+
+function setupLeadForm() {
+    // Boş bırakılırsa Wix bu alanları kırmızı çerçeveyle işaretler
+    $w('#input4').required = true;
+    $w('#input6').required = true;
+
+    $w('#input5').onCustomValidation((value, reject) => {
+        const email = (value || '').trim();
+        if (email && !EMAIL_PATTERN.test(email)) {
+            reject('Geçerli bir e-posta adresi girin.');
+        }
+    });
+
+    $w('#formButton').onClick(handleLeadSubmit);
+}
+
+async function handleLeadSubmit() {
+    if (isSubmittingLead) return;
+
+    const fields = ['#input4', '#input5', '#input6'].map((id) => $w(id));
+    if (!fields.every((field) => field.valid)) {
+        fields.forEach((field) => field.updateValidityIndication());
+        return;
+    }
+
+    isSubmittingLead = true;
+    $w('#formButton').disable();
+
+    const lead = {
+        name: $w('#input4').value.trim(),
+        email: ($w('#input5').value || '').trim(),
+        phone: $w('#input6').value.trim(),
+        message: ($w('#formMessage').value || '').trim(),
+    };
+
+    try {
+        const result = await submitLead(lead);
+        if (result.ok) {
+            clearLeadForm();
+        } else {
+            // Girilen bilgiler silinmez, ziyaretçi tekrar deneyebilir
+            console.error('Lead submit failed:', result.error);
+        }
+    } catch (err) {
+        console.error('Lead submit error:', err);
+    }
+
+    $w('#formButton').enable();
+    isSubmittingLead = false;
+}
+
+function clearLeadForm() {
+    FORM_FIELD_IDS.forEach((id) => {
+        $w(id).value = '';
+        $w(id).resetValidityIndication();
+    });
 }
