@@ -21,6 +21,7 @@
  */
 
 import { session } from 'wix-storage-frontend';
+import wixSiteFrontend from 'wix-site-frontend';
 import { sendChatMessage, submitLead, wakeUpServer } from 'backend/museApi.web';
 
 const WELCOME_MESSAGE =
@@ -32,6 +33,9 @@ const STORAGE_KEY = 'museChatHistory';
 const MAX_HISTORY = 10;      // API'ye gönderilen geçmiş mesaj sayısı
 const MAX_VISIBLE = 6;       // Ekranda gösterilen son mesaj sayısı
 const MAX_STORED = 30;       // Sayfa geçişlerinde saklanan mesaj sayısı
+
+// Sohbet butonunun gösterilmeyeceği sayfalar (Wix'teki sayfa adıyla birebir aynı yazılmalı)
+const PAGES_WITHOUT_CHAT = ['YÖNETİM PANELİ'];
 
 const EMAIL_PATTERN = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 const FORM_FIELD_IDS = ['#input4', '#input5', '#input6', '#formMessage'];
@@ -57,6 +61,14 @@ $w.onReady(function () {
 // ─────────────────────────────────────────────
 
 function setupChat() {
+    const pageName = wixSiteFrontend.currentPage?.name;
+    if (PAGES_WITHOUT_CHAT.includes(pageName)) {
+        $w('#chatToggle').hide();
+        $w('#chatBox').hide();
+    } else {
+        $w('#chatToggle').show();
+    }
+
     renderMessages();
 
     $w('#chatToggle').onClick(toggleChat);
